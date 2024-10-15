@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { ref, computed, defineProps } from "vue";
 import { useRoute } from "vue-router";
+import { useDisplay } from "vuetify";
 import axiosInstance from "@/services/axiosInstance";
+
+const { mdAndUp } = useDisplay();
 
 const props = defineProps<{
     firstname?: string;
@@ -113,8 +116,8 @@ const handleFileChange = (event: Event) => {
 
 <template>
     <v-container class="mt-16">
-        <v-row class="mx-16">
-            <v-col cols="2" class="mb-2 ml-1">
+        <v-row :class="{ 'mx-16': mdAndUp }">
+            <v-col cols="12" sm="6" class="mb-2 ml-1">
                 <p class="text-h3 text-title">
                     {{ isEditMode ? "Edit user" : "Add user" }}
                 </p>
@@ -122,20 +125,65 @@ const handleFileChange = (event: Event) => {
 
             <v-responsive width="100%"></v-responsive>
 
-            <v-col cols="8">
+            <v-col :cols="mdAndUp ? 8 : 12">
                 <v-card
                     color="#ffffff"
                     class="pa-4"
-                    height="350"
                     :elevation="3"
+                    min-height="350"
                 >
                     <v-form
                         ref="userForm"
                         @submit.prevent="authenticateForm"
                         class="d-flex flex-column fill-height"
                     >
-                        <v-card-item class="mt-11">
+                        <v-card-item :class="{ 'mt-11': mdAndUp }">
                             <v-row>
+                                <v-col cols="12" v-if="!mdAndUp">
+                                    <v-card
+                                        color="#ffffff"
+                                        class="d-flex flex-column mt-n10"
+                                        variant="flat"
+                                    >
+                                        <v-avatar
+                                            class="mx-auto mt-11 pa-1 border-sm"
+                                            color="#f3f6f9"
+                                            size="150"
+                                        >
+                                            <v-img
+                                                :src="selectedImage"
+                                                cover
+                                                rounded="circle"
+                                                v-if="selectedImage"
+                                            ></v-img>
+                                            <v-img
+                                                src="../assets/default.jpg"
+                                                cover
+                                                rounded="circle"
+                                                v-else
+                                            ></v-img>
+                                        </v-avatar>
+
+                                        <v-card-actions class="mt-auto">
+                                            <v-btn
+                                                width="100%"
+                                                class="text-subtitle-1 font-weight-regular"
+                                                variant="outlined"
+                                                color="#707479"
+                                                prepend-icon="mdi-camera"
+                                                @click="imageInput.click()"
+                                            >
+                                                Change Photo
+                                            </v-btn>
+                                            <v-file-input
+                                                ref="imageInput"
+                                                @change="handleFileChange"
+                                                accept="image/*"
+                                                style="display: none"
+                                            ></v-file-input>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-col>
                                 <v-col cols="6">
                                     <p class="text-subtitle-2 mb-1">
                                         First Name
@@ -177,11 +225,11 @@ const handleFileChange = (event: Event) => {
                     </v-form>
                 </v-card>
             </v-col>
-            <v-col cols="4">
+            <v-col cols="4" v-if="mdAndUp">
                 <v-card
                     color="#ffffff"
                     class="d-flex flex-column pa-4"
-                    height="350"
+                    min-height="350"
                     :elevation="3"
                 >
                     <v-avatar

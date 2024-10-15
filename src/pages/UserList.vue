@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useDisplay } from "vuetify";
 import axiosInstance from "@/services/axiosInstance";
 
 interface User {
@@ -9,6 +10,8 @@ interface User {
     last_name: string;
     avatar: string;
 }
+
+const { mdAndUp } = useDisplay();
 
 const router = useRouter();
 
@@ -112,8 +115,8 @@ const getRowStyle = (item: any) => {
     />
 
     <v-container class="mt-16">
-        <v-row class="mx-16">
-            <v-col cols="2" class="mb-2 ml-1">
+        <v-row :class="{ 'mx-16': mdAndUp }">
+            <v-col cols="12" sm="6" class="mb-2 ml-1">
                 <p class="text-h3 text-title">User list</p>
             </v-col>
 
@@ -127,7 +130,7 @@ const getRowStyle = (item: any) => {
                     :elevation="3"
                 >
                     <v-row>
-                        <v-col cols="6">
+                        <v-col :cols="mdAndUp ? 6 : 7">
                             <v-text-field
                                 variant="solo"
                                 v-model="search"
@@ -136,17 +139,18 @@ const getRowStyle = (item: any) => {
                                 density="compact"
                                 single-line
                                 hide-details
-                                class="mb-4 w-50 font-weight-bold"
+                                class="mb-4 font-weight-bold"
+                                :class="{ 'w-50': mdAndUp }"
                                 bg-color="#f9f9fb"
                                 flat
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="6" class="text-right">
+                        <v-col :cols="mdAndUp ? 6 : 5" class="text-right">
                             <v-btn
                                 class="text-subtitle-1"
                                 color="#449772"
                                 rounded="xl"
-                                height="43"
+                                :height="mdAndUp ? 43 : 40"
                                 prepend-icon="mdi-plus"
                                 flat
                                 @click="router.push('/add')"
